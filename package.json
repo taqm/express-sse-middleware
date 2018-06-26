@@ -1,0 +1,28 @@
+{
+  "name": "express-sse-middleware",
+  "version": "1.0.4",
+  "description": "node.js express server sent event response middleware",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taqm/express-sse-middleware.git"
+  },
+  "keywords": [
+    "express"
+  ],
+  "author": "taqm",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "rimraf dist && tsc"
+  },
+  "devDependencies": {
+    "@types/express": "^4.16.0",
+    "rimraf": "^2.6.2",
+    "tslint": "^5.10.0",
+    "tslint-config-airbnb": "^5.9.2",
+    "typescript": "^2.9.2"
+  },
+  "dependencies": {
+    "express-sse-middleware": "^1.0.1"
+  }
+}
