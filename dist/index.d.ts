@@ -10,6 +10,7 @@ declare type EventData = string | {
     id?: string;
     event?: string;
     data?: string;
+    keep?: boolean;
 };
 interface Writer {
     (data: EventData): void;

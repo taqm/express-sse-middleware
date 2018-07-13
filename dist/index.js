@@ -13,6 +13,11 @@ const handler = function (req, res, next) {
                 res.write(`data: ${data}\n\n`);
                 return;
             }
+            // connection keeping
+            if (data.keep) {
+                res.write(':\n\n');
+                return;
+            }
             if (data.id)
                 res.write(`id: ${data.event}\n`);
             if (data.event)

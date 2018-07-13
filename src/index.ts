@@ -12,6 +12,7 @@ type EventData = string | {
   id?: string;
   event?: string;
   data?: string;
+  keep?: boolean;
 };
 
 interface Writer {
@@ -45,6 +46,12 @@ const handler = function (
     return (data: EventData = '') => {
       if (typeof(data) === 'string') {
         res.write(`data: ${data}\n\n`);
+        return;
+      }
+
+      // connection keeping
+      if (data.keep) {
+        res.write(':\n\n');
         return;
       }
 
