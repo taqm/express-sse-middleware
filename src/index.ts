@@ -17,6 +17,9 @@ export interface EventData {
 
 class SseProvider {
   constructor(readonly res: Response) {
+    this.send = this.send.bind(this);
+    this.keepAlive = this.keepAlive.bind(this);
+    this.close = this.close.bind(this);
   }
 
   send(data: EventData | string) {
