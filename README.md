@@ -16,11 +16,11 @@ import sseMiddleware from 'express-sse-middleware';
 
 app.use(sseMiddleware);
 app.get('/path', (req, res) => {
-  const sentMsg = res.sse(); // `adding Response.sse()` funciton
+  const sse = res.sse(); // `adding Response.sse()` funciton
 
   let count = 0;
   setInterval(() => {
-    sentMsg(String(count++));
+    sse.send(String(count++));
   }, 1000);
   
   // sent incremented number every second.

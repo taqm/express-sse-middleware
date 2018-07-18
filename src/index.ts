@@ -1,22 +1,51 @@
 import { Request, Response, NextFunction } from 'express';
+export { builder } from './EventBuilder';
 
 declare global {
   export namespace Express {
     export interface Response {
-      sse(param?: SseParam): Writer;
+      sse(param?: SseParam): SseProvider;
     }
   }
 }
 
-type EventData = string | {
-  id?: string;
-  event?: string;
-  data?: string;
-  keep?: boolean;
-};
+export interface EventData {
+  id?: string | null;
+  event?: string | null;
+  data: string | object;
+}
 
-interface Writer {
-  (data: EventData): void;
+class SseProvider {
+  constructor(readonly res: Response) {
+  }
+
+  send(data: EventData | string) {
+    if (typeof(data) === 'string') {
+      this.res.write(`data: ${data}\n\n`);
+      return;
+    }
+
+    if (data.id)    this.res.write(`id: ${data.event}\n`);
+    if (data.event) this.res.write(`event: ${data.event}\n`);
+    let text: string;
+    if (typeof(data.data) === 'string') {
+      text = data.data;
+    } else {
+      text = JSON.stringify(data.data);
+    }
+    this.res.write(`data: ${text}\n\n`);
+  }
+
+  /**
+   * write empty comment
+   */
+  keepAlive() {
+    this.res.write(':\n\n');
+  }
+
+  close() {
+    this.res.end();
+  }
 }
 
 interface SseParam {
@@ -43,25 +72,10 @@ const handler = function (
     );
     res.write('\n');
 
-    return (data: EventData = '') => {
-      if (typeof(data) === 'string') {
-        res.write(`data: ${data}\n\n`);
-        return;
-      }
-
-      // connection keeping
-      if (data.keep) {
-        res.write(':\n\n');
-        return;
-      }
-
-      if (data.id)    res.write(`id: ${data.event}\n`);
-      if (data.event) res.write(`event: ${data.event}\n`);
-      res.write(`data: ${data.data}\n\n`);
-    };
+    return new SseProvider(res);
   };
-
   next();
 };
 
 export default handler;
+
