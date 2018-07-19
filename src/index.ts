@@ -4,25 +4,25 @@ export { builder } from './EventBuilder';
 declare global {
   export namespace Express {
     export interface Response {
-      sse(param?: SseParam): SseProvider;
+      sse<E = string | object>(param?: SseParam): SseProvider<E>;
     }
   }
 }
 
-export interface EventData {
+export interface EventData<E> {
   id?: string | null;
   event?: string | null;
-  data: string | object;
+  data: E | null;
 }
 
-class SseProvider {
+class SseProvider<E> {
   constructor(readonly res: Response) {
     this.send = this.send.bind(this);
     this.keepAlive = this.keepAlive.bind(this);
     this.close = this.close.bind(this);
   }
 
-  send(data: EventData | string) {
+  send<E1 = E> (data: EventData<E1> | string) {
     if (typeof(data) === 'string') {
       this.res.write(`data: ${data}\n\n`);
       return;

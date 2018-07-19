@@ -1,18 +1,18 @@
 import { EventData } from '.';
 
-interface OptionalSetter {
-  id(id: string): OptionalSetter & DataSetter;
-  event(event: string): OptionalSetter & DataSetter;
+interface OptionalSetter<E> {
+  id(id: string): OptionalSetter<E> & DataSetter<E>;
+  event(event: string): OptionalSetter<E> & DataSetter<E>;
 }
-interface DataSetter {
-  data(data: string | object): { build(): EventData };
+interface DataSetter<E> {
+  data(data: E): { build(): EventData<E> };
 }
 
-class EventBuilder implements OptionalSetter, DataSetter {
+class EventBuilder<E> implements OptionalSetter<E>, DataSetter<E> {
 
   private _id: string | null = null;
   private _event: string | null = null;
-  private _data: string | object = {};
+  private _data: E | null = null;
 
   id(id: string) {
     this._id = id;
@@ -23,10 +23,10 @@ class EventBuilder implements OptionalSetter, DataSetter {
     return this;
   };
 
-  data(data: string | object) {
+  data(data: E) {
     this._data = data;
     return {
-      build: (): EventData => ({
+      build: (): EventData<E> => ({
         id: this._id,
         event: this._event,
         data: this._data,
