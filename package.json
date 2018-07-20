@@ -1,6 +1,6 @@
 {
   "name": "express-sse-middleware",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "node.js express server sent event response middleware",
   "repository": {
     "type": "git",
@@ -22,7 +22,5 @@
     "tslint-config-airbnb": "^5.9.2",
     "typescript": "^2.9.2"
   },
-  "dependencies": {
-    "express-sse-middleware": "^1.0.1"
-  }
+  "dependencies": {}
 }
