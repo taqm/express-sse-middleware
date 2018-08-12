@@ -28,7 +28,7 @@ class SseProvider<E> {
       return;
     }
 
-    if (data.id)    this.res.write(`id: ${data.event}\n`);
+    if (data.id)    this.res.write(`id: ${data.id}\n`);
     if (data.event) this.res.write(`event: ${data.event}\n`);
     let text: string;
     if (typeof(data.data) === 'string') {
