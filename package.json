@@ -13,7 +13,9 @@
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf dist && tsc"
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "lint": "eslint src/**/*"
   },
   "dependencies": {},
   "devDependencies": {
@@ -23,13 +25,16 @@
     "eslint": "^7.2.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.21.2",
+    "husky": "^4.2.5",
     "rimraf": "^3.0.2",
     "typescript": "^3.9.5"
   },
   "eslintConfig": {
     "extends": "airbnb-base",
     "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint"],
+    "plugins": [
+      "@typescript-eslint"
+    ],
     "settings": {
       "import/resolver": {
         "node": {
@@ -48,6 +53,11 @@
           "ts": "never"
         }
       ]
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run lint"
     }
   }
 }
