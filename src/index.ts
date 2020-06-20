@@ -59,7 +59,7 @@ interface SseParam {
 }
 
 const handler = (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction,
 ) => {
