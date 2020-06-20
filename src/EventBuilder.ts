@@ -1,40 +1,53 @@
-import { EventData } from '.';
+export type EventData<E> = {
+  id?: string | null;
+  event?: string | null;
+  data: E | null;
+};
 
-interface OptionalSetter<E> {
-  id(id: string): OptionalSetter<E> & DataSetter<E>;
-  event(event: string): OptionalSetter<E> & DataSetter<E>;
-}
-interface DataSetter<E> {
-  data(data: E): { build(): EventData<E> };
-}
+/* eslint-disable no-underscore-dangle */
+class EventBuilder<E> {
+  private _id: string | null = null;
 
-class EventBuilder<E> implements OptionalSetter<E>, DataSetter<E> {
-  #id: string | null = null;
+  private _event: string | null = null;
 
-  #event: string | null = null;
+  private _data: E | null = null;
 
-  #data: E | null = null;
+  id = (id: string) => {
+    const obj = this.clone();
+    obj._id = id;
+    return obj;
+  };
 
-  id(id: string) {
-    this.#id = id;
-    return this;
+  event = (event: string) => {
+    const obj = this.clone();
+    obj._event = event;
+    return obj;
   }
 
-  event(event: string) {
-    this.#event = event;
-    return this;
+  data = (data: E) => {
+    const obj = this.clone();
+    obj._data = data;
+    return obj;
   }
 
-  data(data: E) {
-    this.#data = data;
+  build = (): EventData<E> => {
+    if (this._data === null) {
+      throw Error('data is required.');
+    }
     return {
-      build: (): EventData<E> => ({
-        id: this.#id,
-        event: this.#event,
-        data: this.#data,
-      }),
+      id: this._id,
+      event: this._event,
+      data: this._data,
     };
   }
+
+  private clone = () => {
+    const newObj = new EventBuilder<E>();
+    newObj._id = this._id;
+    newObj._event = this._event;
+    newObj._data = this._data;
+    return newObj;
+  };
 }
 
-export default () => new EventBuilder();
+export default EventBuilder;
