@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-export { builder } from './EventBuilder';
+import { Request, Response, NextFunction } from 'express'; // eslint-disable-line import/no-unresolved
+
+export { default as builder } from './EventBuilder';
 
 declare global {
   export namespace Express {
@@ -22,16 +23,17 @@ class SseProvider<E> {
     this.close = this.close.bind(this);
   }
 
-  send<E1 = E> (data: EventData<E1> | string) {
-    if (typeof(data) === 'string') {
+  send<E1 = E>(data: EventData<E1> | string) {
+    if (typeof (data) === 'string') {
       this.res.write(`data: ${data}\n\n`);
       return;
     }
 
-    if (data.id)    this.res.write(`id: ${data.id}\n`);
+    if (data.id) this.res.write(`id: ${data.id}\n`);
     if (data.event) this.res.write(`event: ${data.event}\n`);
+
     let text: string;
-    if (typeof(data.data) === 'string') {
+    if (typeof (data.data) === 'string') {
       text = data.data;
     } else {
       text = JSON.stringify(data.data);
@@ -56,22 +58,20 @@ interface SseParam {
   headers?: object;
 }
 
-const handler = function (
+const handler = (
   req: Request,
   res: Response,
   next: NextFunction,
-) {
+) => {
   res.sse = (param = {}) => {
     res.writeHead(
       param.statusCode || 200,
-      Object.assign(
-        {
-          'Content-Type': 'text/event-stream',
-          'Cache-Control': 'no-cache',
-          Connection: 'keep-alive',
-        },
-        param.headers,
-      ),
+      {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive',
+        ...param.headers,
+      },
     );
     res.write('\n');
 
@@ -81,4 +81,3 @@ const handler = function (
 };
 
 export default handler;
-
