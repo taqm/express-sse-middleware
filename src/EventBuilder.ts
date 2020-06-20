@@ -9,29 +9,32 @@ interface DataSetter<E> {
 }
 
 class EventBuilder<E> implements OptionalSetter<E>, DataSetter<E> {
+  #id: string | null = null;
 
-  private _id: string | null = null;
-  private _event: string | null = null;
-  private _data: E | null = null;
+  #event: string | null = null;
+
+  #data: E | null = null;
 
   id(id: string) {
-    this._id = id;
+    this.#id = id;
     return this;
   }
+
   event(event: string) {
-    this._event = event;
+    this.#event = event;
     return this;
-  };
+  }
 
   data(data: E) {
-    this._data = data;
+    this.#data = data;
     return {
       build: (): EventData<E> => ({
-        id: this._id,
-        event: this._event,
-        data: this._data,
+        id: this.#id,
+        event: this.#event,
+        data: this.#data,
       }),
     };
   }
 }
-export const builder = () => new EventBuilder();
+
+export default () => new EventBuilder();
