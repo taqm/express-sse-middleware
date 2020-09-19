@@ -3,8 +3,8 @@ import SseProvider from './SseProvider';
 
 declare global {
   export namespace Express {
-    export interface Response {
-      sse(param?: SseParam): SseProvider;
+    export interface Response { // eslint-disable-line no-shadow
+      sse(param?: SseParam): SseProvider; // eslint-disable-line no-use-before-define
     }
   }
 }
